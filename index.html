@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>World Map by Region</title>
+  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+  <style>
+    #chartdiv {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chartdiv"></div>
+
+<script>
+am5.ready(function() {
+  var root = am5.Root.new("chartdiv");
+
+  root.setThemes([am5themes_Animated.new(root)]);
+
+  var chart = root.container.children.push(
+    am5map.MapChart.new(root, {
+      panX: "rotateX",
+      panY: "translateY",
+      projection: am5map.geoMercator()
+    })
+  );
+
+  var polygonSeries = chart.series.push(
+    am5map.MapPolygonSeries.new(root, {
+      geoJSON: am5geodata_worldLow,
+      exclude: ["AQ"]
+    })
+  );
+
+  // Распределение регионов
+  const regionColors = {
+    "AF": am5.color(0x66BB6A),
+    "MENA": am5.color(0xFFA726),
+    "AS": am5.color(0x29B6F6),
+    "EU": am5.color(0xAB47BC),
+    "NA": am5.color(0xEF5350),
+    "SA": am5.color(0xFFEE58),
+    "OC": am5.color(0x26C6DA),
+    "AN": am5.color(0x8D6E63)
+  };
+
+  const countryRegions = {
+    dz: "MENA", ao: "AF", bj: "AF", bw: "AF", bf: "AF", bi: "AF", cm: "AF", cv: "AF",
+    cf: "AF", td: "AF", km: "AF", cg: "AF", cd: "AF", ci: "AF", dj: "AF", eg: "MENA",
+    gq: "AF", er: "AF", et: "AF", ga: "AF", gm: "AF", gh: "AF", gn: "AF", gw: "AF",
+    ke: "AF", ls: "AF", lr: "AF", ly: "MENA", mg: "AF", mw: "AF", ml: "AF", mr: "AF",
+    mu: "AF", yt: "AF", ma: "MENA", mz: "AF", na: "AF", ne: "AF", ng: "AF", re: "AF",
+    rw: "AF", sh: "AF", st: "AF", sn: "AF", sc: "AF", sl: "AF", so: "AF", za: "AF",
+    ss: "AF", sd: "AF", sz: "AF", tz: "AF", tg: "AF", tn: "MENA", ug: "AF", eh: "AF",
+    zm: "AF", zw: "AF", aq: "AN", bv: "AN", tf: "AN", hm: "AN", gs: "AN", af: "AS",
+    am: "MENA", az: "MENA", bh: "MENA", bd: "AS", bt: "AS", io: "AS", bn: "AS",
+    kh: "AS", cn: "AS", cx: "AS", cc: "AS", cy: "MENA", ge: "MENA", hk: "AS",
+    in: "AS", id: "AS", ir: "AS", iq: "MENA", il: "MENA", jp: "AS", jo: "MENA",
+    kz: "EU", kp: "AS", kr: "AS", kw: "MENA", kg: "AS", la: "AS", lb: "MENA",
+    mo: "AS", my: "AS", mv: "AS", mn: "AS", mm: "AS", np: "AS", om: "MENA",
+    pk: "AS", ps: "AS", ph: "AS", qa: "MENA", sa: "MENA", sg: "AS", lk: "AS",
+    sy: "MENA", tw: "AS", tj: "AS", th: "AS", tl: "AS", tm: "AS", ae: "MENA",
+    uz: "AS", vn: "AS", ye: "MENA", ax: "EU", al: "EU", ad: "EU", at: "EU",
+    by: "EU", be: "EU", ba: "EU", bg: "EU", hr: "EU", cz: "EU", dk: "EU",
+    ee: "EU", fo: "EU", fi: "EU", fr: "EU", de: "EU", gi: "EU", gr: "EU",
+    gg: "EU", va: "EU", hu: "EU", is: "EU", ie: "EU", im: "EU", it: "EU",
+    je: "EU", lv: "EU", li: "EU", lt: "EU", lu: "EU", mk: "EU", mt: "EU",
+    md: "EU", mc: "EU", me: "EU", nl: "EU", no: "EU", pl: "EU", pt: "EU",
+    ro: "EU", ru: "EU", sm: "EU", rs: "EU", sk: "EU", si: "EU", es: "EU",
+    sj: "EU", se: "EU", ch: "EU", tr: "EU", ua: "EU", gb: "EU", xk: "EU",
+    wls: "EU", ai: "NA", ag: "NA", aw: "NA", bs: "NA", bb: "NA", bz: "NA",
+    bm: "NA", bq: "NA", ca: "NA", ky: "NA", cr: "NA", cu: "NA", cw: "NA",
+    dm: "NA", do: "NA", sv: "NA", gl: "NA", gd: "NA", gp: "NA", gt: "NA",
+    ht: "NA", hn: "NA", jm: "NA", mq: "NA", mx: "NA", ms: "NA", ni: "NA",
+    pa: "NA", pr: "NA", bl: "NA", kn: "NA", lc: "NA", mf: "NA", pm: "NA",
+    vc: "NA", sx: "NA", tt: "NA", tc: "NA", us: "NA", vg: "NA", vi: "NA",
+    as: "OC", au: "OC", ck: "OC", fj: "OC", pf: "OC", gu: "OC", ki: "OC",
+    mh: "OC", fm: "OC", nr: "OC", nc: "OC", nz: "OC", nu: "OC", nf: "OC",
+    mp: "OC", pw: "OC", pg: "OC", pn: "OC", ws: "OC", sb: "OC", tk: "OC",
+    to: "OC", tv: "OC", um: "OC", vu: "OC", wf: "OC", ar: "SA", bo: "SA",
+    br: "SA", cl: "SA", co: "SA", ec: "SA", fk: "SA", gf: "SA", gy: "SA",
+    py: "SA", pe: "SA", sr: "SA", uy: "SA", ve: "SA"
+  };
+
+  polygonSeries.mapPolygons.template.set("tooltipText", "{name}");
+
+  polygonSeries.mapPolygons.template.adapters.add("fill", (fill, target) => {
+    const id = target.dataItem.dataContext.id.toLowerCase();
+    const region = countryRegions[id];
+    return regionColors[region] || fill;
+  });
+
+});
+</script>
+
+</body>
+</html>
